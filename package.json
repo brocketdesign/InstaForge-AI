@@ -1,0 +1,33 @@
+{
+  "name": "instaforge-ai",
+  "version": "1.0.0",
+  "description": "InstaForge AI is a content generation app that creates Instagram-ready visuals and captions from a simple prompt. It generates multiple AI images from a single concept, overlays short viral text ideas for each image, and produces optimized captions with hashtags aligned to a specific theme and marketing goal (e.g., app promotion).",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@clerk/nextjs": "^6.36.5",
+    "@heroicons/react": "^2.2.0",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^25.0.3",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.23",
+    "axios": "^1.13.2",
+    "lucide-react": "^0.562.0",
+    "mongodb": "^7.0.0",
+    "next": "^16.1.1",
+    "postcss": "^8.5.6",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
+  }
+}
