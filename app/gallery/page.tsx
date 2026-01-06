@@ -5,6 +5,15 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Loader2, Eye, Trash2 } from 'lucide-react';
 
+// Helper to extract string from potentially object values
+const getTextValue = (value: unknown): string => {
+  if (typeof value === 'string') return value;
+  if (value && typeof value === 'object' && 'text' in value) {
+    return String((value as { text: unknown }).text);
+  }
+  return value ? String(value) : '';
+};
+
 interface ContentItem {
   _id: string;
   prompt: string;
@@ -97,13 +106,15 @@ export default function GalleryPage() {
                     src={content.images[0].url}
                     alt={content.prompt}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover"
+                    unoptimized
                   />
                 )}
                 {content.images[0]?.textOverlay && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
-                    <span className="text-white text-2xl font-bold text-center px-4">
-                      {content.images[0].textOverlay}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                    <span className="text-white text-2xl font-bold text-center px-4 drop-shadow-lg">
+                      {getTextValue(content.images[0].textOverlay)}
                     </span>
                   </div>
                 )}

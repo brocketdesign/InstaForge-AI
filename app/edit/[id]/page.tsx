@@ -5,6 +5,15 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Loader2, Save, ArrowLeft, Download } from 'lucide-react';
 
+// Helper to extract string from potentially object values
+const getTextValue = (value: unknown): string => {
+  if (typeof value === 'string') return value;
+  if (value && typeof value === 'object' && 'text' in value) {
+    return String((value as { text: unknown }).text);
+  }
+  return value ? String(value) : '';
+};
+
 interface ImageContent {
   url: string;
   textOverlay?: string;
@@ -159,12 +168,14 @@ export default function EditPage() {
                     src={image.url}
                     alt={`Generated image ${index + 1}`}
                     fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover"
+                    unoptimized
                   />
                   {image.textOverlay && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20">
-                      <span className="text-white text-3xl font-bold text-center px-4">
-                        {image.textOverlay}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                      <span className="text-white text-3xl font-bold text-center px-4 drop-shadow-lg">
+                        {getTextValue(image.textOverlay)}
                       </span>
                     </div>
                   )}
@@ -175,7 +186,7 @@ export default function EditPage() {
                   </label>
                   <input
                     type="text"
-                    value={image.textOverlay || ''}
+                    value={getTextValue(image.textOverlay)}
                     onChange={(e) => updateTextOverlay(index, e.target.value)}
                     placeholder="Add text overlay..."
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"

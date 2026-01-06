@@ -2,7 +2,8 @@ import { auth as clerkAuth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { generateImages, generateTextContent } from '@/lib/novita';
 import clientPromise from '@/lib/mongodb';
-import { ContentItem, ImageContent } from '@/lib/types';
+import { ContentItem, ImageContent, canGenerate, FREE_TIER_LIMIT } from '@/lib/types';
+import { getOrCreateSubscription, incrementGenerationCount } from '@/lib/subscription';
 
 export async function POST(request: Request) {
   try {
@@ -10,6 +11,20 @@ export async function POST(request: Request) {
     
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // Check subscription and generation limits
+    const subscription = await getOrCreateSubscription(userId);
+    
+    if (!canGenerate(subscription)) {
+      return NextResponse.json(
+        { 
+          error: 'Generation limit reached',
+          message: `You've used all ${FREE_TIER_LIMIT} free generations this month. Upgrade to Pro for unlimited generations!`,
+          limitReached: true,
+        },
+        { status: 403 }
+      );
     }
 
     const body = await request.json();
@@ -52,6 +67,9 @@ export async function POST(request: Request) {
     };
 
     const result = await db.collection('content').insertOne(contentItem);
+
+    // Increment generation count
+    await incrementGenerationCount(userId);
 
     return NextResponse.json({
       success: true,

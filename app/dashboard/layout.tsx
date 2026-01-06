@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
-import { Home, Image, Images, User } from 'lucide-react';
+import { Home, Image, Images, User, Crown } from 'lucide-react';
+import AdminDebugPanel from '@/components/AdminDebugPanel';
 
 export default function DashboardLayout({
   children,
@@ -69,6 +70,17 @@ export default function DashboardLayout({
                   <User className="w-4 h-4 mr-2" />
                   Profile
                 </Link>
+                <Link
+                  href="/upgrade"
+                  className={`${
+                    isActive('/upgrade')
+                      ? 'border-purple-500 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                  } inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium`}
+                >
+                  <Crown className="w-4 h-4 mr-2" />
+                  Upgrade
+                </Link>
               </div>
             </div>
             <div className="flex items-center">
@@ -82,6 +94,9 @@ export default function DashboardLayout({
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </main>
+
+      {/* Admin Debug Panel */}
+      <AdminDebugPanel />
     </div>
   );
 }

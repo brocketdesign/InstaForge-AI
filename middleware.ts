@@ -6,9 +6,17 @@ const isProtectedRoute = createRouteMatcher([
   '/gallery(.*)',
   '/profile(.*)',
   '/edit(.*)',
+  '/upgrade(.*)',
+]);
+
+const isPublicApiRoute = createRouteMatcher([
+  '/api/stripe/webhook',
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+  // Allow Stripe webhook without authentication
+  if (isPublicApiRoute(req)) return;
+  
   if (isProtectedRoute(req)) await auth.protect();
 });
 
